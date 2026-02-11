@@ -1,0 +1,11 @@
+data/
+CASIA2/
+CASIA2.zip
+*.jpg
+!client/*.jpg
+*.pkl
+*.csv
+__pycache__/
+.env
+temp_ela.jpg
+temp_upload.jpg
