@@ -12,7 +12,7 @@
 *   **🤖 ML-Powered Verdict:** Uses a Random Forest classifier (trained on 10,000+ samples) to provide a final Authenticity Score.
 *   **📊 Dynamic Dashboard:** A premium, dark-themed command center for real-time analysis.
 
----
+--- 
 
 ## 📂 Project Structure
 
