@@ -13,15 +13,16 @@ class ForensicExtractors:
         Detects differences in compression levels within an image.
         Modified areas will typically show higher error levels.
         """
-        # 1. Save image at a specific quality
-        temp_filename = 'temp_ela.jpg'
-        cv2.imwrite(temp_filename, image, [cv2.IMWRITE_JPEG_QUALITY, quality])
+        # 1. Compress image in memory
+        _, buffer = cv2.imencode('.jpg', image, [cv2.IMWRITE_JPEG_QUALITY, quality])
         
-        # 2. Re-read the compressed image
-        compressed_img = cv2.imread(temp_filename)
+        # 2. Re-decode the compressed image from buffer
+        compressed_img = cv2.imdecode(buffer, cv2.IMREAD_COLOR)
         
+        if compressed_img is None:
+            return np.zeros_like(image)
+
         # 3. Calculate absolute difference
-        # High difference = potential manipulation
         ela_map = cv2.absdiff(image, compressed_img)
         
         # 4. Amplify the difference for better visualization/feature extraction

@@ -22,22 +22,32 @@ class ForensicTrainer:
 
     def collect_features(self):
         """Iterates through data folders and extracts forensic features."""
-        categories = {'real': 0, 'fake': 1}
+        from tqdm import tqdm
+        categories = {'training_real': 0, 'training_fake': 1}
         
-        print("Starting feature extraction from dataset...")
+        print(f"Starting feature extraction from: {self.data_dir}")
         
         for category, label in categories.items():
-            path = os.path.join(self.data_dir, category)
-            if not os.path.exists(path):
-                print(f"Warning: Path {path} does not exist. Skipping.")
+            dataset_path = os.path.join(self.data_dir, category)
+            if not os.path.exists(dataset_path):
+                print(f"Warning: Path {dataset_path} does not exist. Skipping.")
                 continue
-                
-            files = [f for f in os.listdir(path) if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tif', '.bmp'))]
-            print(f"Processing {len(files)} images in '{category}'...")
+            
+            # Recursively find all images
+            all_files = []
+            for root, dirs, files in os.walk(dataset_path):
+                for f in files:
+                    if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tif', '.bmp')):
+                        all_files.append(os.path.join(root, f))
+            
+            print(f"Found {len(all_files)} images in '{category}'...")
+            
+            # Optionally limit to avoid extreme long runs if testing
+            # all_files = all_files[:2500] 
 
-            for filename in files:
+            for img_path in tqdm(all_files, desc=f"Extracting {category}"):
                 try:
-                    img_path = os.path.join(path, filename)
+                    filename = os.path.basename(img_path)
                     
                     # 1. Preprocess
                     processed_data = self.preprocessor.process(img_path)
@@ -59,7 +69,8 @@ class ForensicTrainer:
                     self.features_list.append(combined_features)
                     
                 except Exception as e:
-                    print(f"Error processing {filename}: {e}")
+                    # Silence errors for large batches but log them to a file if needed
+                    pass
 
         # Convert to DataFrame
         df = pd.DataFrame(self.features_list)
@@ -71,7 +82,7 @@ class ForensicTrainer:
     def train_model(self, df):
         """Trains a Random Forest classifier on the extracted features."""
         if df.empty:
-            print("No data found to train on. Please add images to data/real and data/fake.")
+            print("No data found to train on. Please check your data directory.")
             return None
 
         # Prepare features (X) and labels (y)
@@ -111,11 +122,12 @@ class ForensicTrainer:
         return model
 
 if __name__ == "__main__":
-    # Ensure we are in the src directory context or add current path
     import sys
     sys.path.append(os.getcwd())
     
-    trainer = ForensicTrainer(data_dir=os.path.join(os.path.dirname(__file__), '..', 'data'))
+    # Use the specific data path
+    dataset_path = os.path.join(os.getcwd(), 'data')
+    trainer = ForensicTrainer(data_dir=dataset_path)
     
     # 1. Collect features (this will create 'forensic_features.csv')
     df = trainer.collect_features()
@@ -124,7 +136,5 @@ if __name__ == "__main__":
     if not df.empty:
         trainer.train_model(df)
     else:
-        print("\n[!] Dataset is empty. To train the model:")
-        print("1. Add real images to 'data/real/'")
-        print("2. Add fake/edited images to 'data/fake/'")
-        print("3. Run this script again.")
+        print(f"\n[!] Dataset at {dataset_path} is empty or not found.")
+
