@@ -1,7 +1,5 @@
 import os
-import cv2
 import pandas as pd
-import numpy as np
 import pickle
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -33,22 +31,16 @@ class ForensicTrainer:
                 print(f"Warning: Path {dataset_path} does not exist. Skipping.")
                 continue
             
-            # Recursively find all images
             all_files = []
-            for root, dirs, files in os.walk(dataset_path):
+            for root, _, files in os.walk(dataset_path):
                 for f in files:
                     if f.lower().endswith(('.png', '.jpg', '.jpeg', '.tif', '.bmp')):
                         all_files.append(os.path.join(root, f))
             
             print(f"Found {len(all_files)} images in '{category}'...")
-            
-            # Optionally limit to avoid extreme long runs if testing
-            # all_files = all_files[:2500] 
 
             for img_path in tqdm(all_files, desc=f"Extracting {category}"):
                 try:
-                    filename = os.path.basename(img_path)
-                    
                     # 1. Preprocess
                     processed_data = self.preprocessor.process(img_path)
                     
@@ -64,15 +56,12 @@ class ForensicTrainer:
                     # Merge all features
                     combined_features = {**forensic_features, **forgery_features}
                     combined_features['label'] = label
-                    combined_features['filename'] = filename
                     
                     self.features_list.append(combined_features)
                     
-                except Exception as e:
-                    # Silence errors for large batches but log them to a file if needed
+                except Exception:
                     pass
 
-        # Convert to DataFrame
         df = pd.DataFrame(self.features_list)
         if not df.empty:
             df.to_csv('forensic_features.csv', index=False)
@@ -82,27 +71,23 @@ class ForensicTrainer:
     def train_model(self, df):
         """Trains a Random Forest classifier on the extracted features."""
         if df.empty:
-            print("No data found to train on. Please check your data directory.")
+            print("No data found to train on.")
             return None
 
         # Prepare features (X) and labels (y)
-        # We drop filename and label from X
-        X = df.drop(['label', 'filename'], axis=1)
+        X = df.drop(['label'], axis=1)
         y = df['label']
 
-        # Split into training and testing sets
         X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-        print(f"Training on {len(X_train)} samples, testing on {len(X_test)} samples...")
+        print(f"Training on {len(X_train)} samples...")
 
-        # Initialize and train Random Forest
         model = RandomForestClassifier(n_estimators=100, random_state=42)
         model.fit(X_train, y_train)
 
         # Evaluate
         y_pred = model.predict(X_test)
-        print("\n--- Model Performance ---")
-        print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+        print(f"\nAccuracy: {accuracy_score(y_test, y_pred):.2f}")
         print("\nClassification Report:")
         print(classification_report(y_test, y_pred))
 
@@ -111,30 +96,17 @@ class ForensicTrainer:
             pickle.dump(model, f)
         print("\nTrained model saved as 'forensic_model.pkl'.")
         
-        # Display Feature Importance
-        importances = pd.DataFrame({
-            'feature': X.columns,
-            'importance': model.feature_importances_
-        }).sort_values('importance', ascending=False)
-        print("\nTop Evidence Indicators:")
-        print(importances)
-
         return model
 
 if __name__ == "__main__":
-    import sys
-    sys.path.append(os.getcwd())
-    
-    # Use the specific data path
     dataset_path = os.path.join(os.getcwd(), 'data')
     trainer = ForensicTrainer(data_dir=dataset_path)
     
-    # 1. Collect features (this will create 'forensic_features.csv')
     df = trainer.collect_features()
     
-    # 2. Train and save model
     if not df.empty:
         trainer.train_model(df)
     else:
         print(f"\n[!] Dataset at {dataset_path} is empty or not found.")
+
 

@@ -1,70 +1,93 @@
 # 🛡️ NeuralTrust: Pixel Authenticity & Forensic Engine
 
-**NeuralTrust** is a state-of-the-art image forensics platform designed to detect digital manipulations, AI-generated synthesis, and metadata inconsistencies. By combining traditional forensic techniques with Machine Learning, it provides a "Trust Score" for any uploaded image.
+![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-4.5+-5C3EE8?style=for-the-badge&logo=opencv&logoColor=white)
+![Accuracy](https://img.shields.io/badge/Accuracy-93%25-brightgreen?style=for-the-badge)
+
+**NeuralTrust** is a professional-grade image forensics platform designed to detect digital manipulations, AI-generated synthesis, and metadata inconsistencies. By merging traditional computer vision techniques with advanced Machine Learning, it delivers a comprehensive "Authenticity Report" for any digital asset.
 
 ---
 
-## 🚀 Key Features
+## 🛠️ System Workflow
 
-*   **🔍 Error Level Analysis (ELA):** Identifies differences in compression levels to spot spliced or edited regions.
-*   **📡 Frequency Domain Analysis (FFT):** Detects unnatural checkerboard artifacts typical of AI generators (GANs/Diffusion).
-*   **❄️ Noise Variance Analysis:** Scans for sensor noise inconsistencies that reveal image composition.
-*   **🤖 ML-Powered Verdict:** Uses a Random Forest classifier (trained on 10,000+ samples) to provide a final Authenticity Score.
-*   **📊 Dynamic Dashboard:** A premium, dark-themed command center for real-time analysis.
+To maintain high transparency, our engine follows a multi-phase forensic pipeline. The flowchart below illustrates how an image moves from raw upload to a final security verdict.
+
+![System Flowchart](image/flowchart.png)
+
+*<b>Figure 1:</b> The technical architecture, showing the transition from Pre-processing to Feature Extraction and ML Inference.*
 
 --- 
 
-## 📂 Project Structure
+## 🚀 Key Forensic Capabilities
 
-```text
-├── client/                # Modern Frontend Dashboard (HTML/CSS/JS)
-├── src/                   # Core Forensic Engine
-│   ├── preprocessing.py   # Image normalization & standardization
-│   ├── extractors.py      # ELA, FFT, and Texture feature extraction
-│   ├── forgery_detectors.py# Copy-Move & Noise inconsistency modules
-│   └── train.py           # Model training pipeline
-├── app.py                 # Flask REST API Backend
-├── detect.py              # Command-line inference tool
-├── forensic_model.pkl    # Pre-trained core model (93% Accuracy)
-└── requirements.txt       # Project dependencies
-```
+*   **🔍 Error Level Analysis (ELA):** Detects intentional alterations by highlighting inconsistencies in JPEG compression levels.
+*   **📡 Frequency Domain Analysis (FFT):** Uncovers geometric artifacts and periodic patterns left behind by AI generators (GANs/Diffusion models).
+*   **❄️ Noise Variance Analysis:** Scans for "sensor fingerprints" to identify spliced regions that don't match the original hardware noise profile.
+*   **🤖 ML-Powered Verdict:** Executes a Random Forest classification model trained on over 10,000 deepfake and authentic samples.
+*   **📊 Command Center:** A high-end, responsive dashboard utilizing glassmorphism for real-time visualization of forensic maps.
 
 ---
 
-## 🛠️ Setup & Installation
+## 📂 Project Organization
 
-### 1. Clone & Install
+The repository is structured to separate the core forensic engine from the user interface and API layers.
+
+![Folder Structure](image/folder%20structure.png)
+
+*<b>Figure 2:</b> Overview of the project directory, highlighting the modularity of the forensic extractors and the backend bridge.*
+
+### Module Breakdown:
+- **`client/`**: The frontend command center (HTML5/CSS3/JS).
+- **`src/`**: The "Engine Room" containing preprocessing, feature extractors, and training logic.
+- **`app.py`**: The RESTful API that powers the communication between the UI and the AI.
+- **`detect.py`**: A low-latency CLI tool for rapid batch analysis.
+
+---
+
+## 💻 Setup & Installation
+
+### 1. Environment Preparation
+Ensure you have Python 3.8+ installed. It is recommended to use a virtual environment.
+
 ```bash
-# Install dependencies
+# Clone the repository
+git clone https://github.com/your-repo/neural-trust.git
+
+# Install core dependencies
 pip install -r requirements.txt
 ```
 
-### 2. Run the Engine
-To start the forensic analysis platform:
+### 2. Launch the Platform
+Start the backend server to enable real-time analysis:
 
 ```bash
-# Start the Backend API
 python app.py
 ```
-Then, open `client/index.html` in your browser to access the dashboard.
+Once the server is running, simply open `client/index.html` in your web browser to start scanning images.
 
-### 3. Training (Optional)
-To retrain the model with your own data:
-1. Place images in `data/training_real` and `data/training_fake`.
-2. Run the training script:
+### 3. Model Training (Advanced)
+If you wish to fine-tune the model for specific datasets:
+1. Populate `data/training_real` and `data/training_fake`.
+2. Execute the optimized training pipeline:
 ```bash
 python src/train.py
 ```
 
 ---
 
-## 🧪 Technologies Used
-- **Backend:** Flask, Python
-- **Computer Vision:** OpenCV, Scikit-Image, NumPy
-- **Machine Learning:** Scikit-Learn (Random Forest)
-- **Frontend:** Vanilla CSS (Glassmorphism), Javascript
+## 🧪 Technologies
+| Layer | Tech Stack |
+| :--- | :--- |
+| **Backend** | Python, Flask, Pickle |
+| **Vision** | OpenCV, NumPy, Scikit-Image |
+| **AI/ML** | Scikit-Learn (Random Forest) |
+| **Frontend** | Vanilla JavaScript, CSS (Modern UI/UX) |
 
 ---
 
-## ⚖️ License
-Distributed under the MIT License. See `LICENSE` for more information.
+## ⚖️ License & Ethics
+This tool is intended for research and educational purposes in the field of digital forensics. Redistributed under the **MIT License**.
+
+---
+*Created with ❤️ for a safer digital world.*

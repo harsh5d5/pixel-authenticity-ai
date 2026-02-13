@@ -5,6 +5,8 @@ class ForgeryDetectors:
     def __init__(self):
         # Initialize the ORB detector for Copy-Move sensing
         # ORB is fast and free to use (unlike SIFT in some OpenCV versions)
+        #orb detect a sharp edge , texture pattrun , corner
+        #after that it  genertae a numaricode for each keypoint
         self.orb = cv2.ORB_create(nfeatures=1000)
         self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
 
@@ -23,7 +25,7 @@ class ForgeryDetectors:
             return 0.0 # Not enough detail to detect cloning
 
         # Match descriptors with themselves (excluding perfect matches at same location)
-        # In a real tool, we'd use a FLANN-based matcher or hierarchical clustering
+    
         # For our "Evidence-First" ML model, we'll calculate a 'Cloning Score'
         
         # Simple heuristic: how many keypoints are 'too similar' despite being in different locations
