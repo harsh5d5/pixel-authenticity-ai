@@ -89,5 +89,4 @@ python src/train.py
 ## ⚖️ License & Ethics
 This tool is intended for research and educational purposes in the field of digital forensics. Redistributed under the **MIT License**.
 
----
-*Created with ❤️ for a safer digital world.*
+
