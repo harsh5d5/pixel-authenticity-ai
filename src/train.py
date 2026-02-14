@@ -11,7 +11,7 @@ from extractors import ForensicExtractors
 from forgery_detectors import ForgeryDetectors
 
 class ForensicTrainer:
-    def __init__(self, data_dir='data'):
+    def __init__(self, data_dir='archive'):
         self.data_dir = data_dir
         self.preprocessor = ImagePreprocessor()
         self.extractors = ForensicExtractors()
@@ -21,7 +21,7 @@ class ForensicTrainer:
     def collect_features(self):
         """Iterates through data folders and extracts forensic features."""
         from tqdm import tqdm
-        categories = {'training_real': 0, 'training_fake': 1}
+        categories = {'RealArt': 0, 'AiArtData': 1}
         
         print(f"Starting feature extraction from: {self.data_dir}")
         
@@ -99,7 +99,7 @@ class ForensicTrainer:
         return model
 
 if __name__ == "__main__":
-    dataset_path = os.path.join(os.getcwd(), 'data')
+    dataset_path = os.path.join(os.getcwd(), 'archive')
     trainer = ForensicTrainer(data_dir=dataset_path)
     
     df = trainer.collect_features()

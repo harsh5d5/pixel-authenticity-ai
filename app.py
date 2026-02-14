@@ -17,6 +17,13 @@ from forgery_detectors import ForgeryDetectors
 app = Flask(__name__)
 CORS(app) # Allow frontend to talk to backend
 
+@app.after_request
+def add_header(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '-1'
+    return response
+
 # Load the trained model
 MODEL_PATH = 'forensic_model.pkl'
 if not os.path.exists(MODEL_PATH):
@@ -73,15 +80,14 @@ def analyze():
         
         if model:
             probability = model.predict_proba(X)[0] # [prob_real, prob_fake]
-            prediction = model.predict(X)[0]
             
-            # Trust score should represent the probability of being REAL
+            # Trust score represents the probability of being REAL
             trust_score = probability[0] * 100
             
-            # Only label as FAKE if the probability of REAL is very low (bias correction)
-            # This makes the "Neural Scan" more conservative before crying wolf
-            if trust_score < 40:
+            if trust_score < 35:
                 prediction_label = "FAKE"
+            elif 35 <= trust_score < 70:
+                prediction_label = "EDITED"
             else:
                 prediction_label = "REAL"
         
@@ -92,18 +98,28 @@ def analyze():
         
         # 5. Build Human-Readable Evidence
         evidence_points = []
-        if forensic_features['ela_mean'] > 5.0:
-            evidence_points.append({"text": "Compression anomalies detected in pixel blocks.", "status": "alert"})
+        
+        # ELA Evidence
+        if forensic_features['ela_mean'] > 8.0:
+            evidence_points.append({"text": "High compression anomalies detected (Significant editing).", "status": "alert"})
+        elif forensic_features['ela_mean'] > 4.0:
+            evidence_points.append({"text": "Minor compression inconsistencies metadata.", "status": "warning"})
         else:
             evidence_points.append({"text": "Compression levels are uniform across the image.", "status": "valid"})
             
-        if combined_features['noise_inconsistency'] > 50:
-            evidence_points.append({"text": "Inconsistent noise patterns suggest splicing.", "status": "alert"})
+        # Noise Evidence
+        if combined_features['noise_inconsistency'] > 70:
+            evidence_points.append({"text": "Major noise inconsistency (Likely splicing).", "status": "alert"})
+        elif combined_features['noise_inconsistency'] > 35:
+            evidence_points.append({"text": "Slight variance in sensor noise profile.", "status": "warning"})
         else:
             evidence_points.append({"text": "Sensor noise matches authentic hardware profile.", "status": "valid"})
 
-        if forensic_features['fft_mean'] > 180:
-            evidence_points.append({"text": "Post-processing or AI-upscaling traces found.", "status": "alert"})
+        # FFT Evidence
+        if forensic_features['fft_mean'] > 200:
+            evidence_points.append({"text": "Artificial frequency spikes (AI patterns).", "status": "alert"})
+        elif forensic_features['fft_mean'] > 150:
+            evidence_points.append({"text": "Unusual frequency signatures detected.", "status": "warning"})
         else:
             evidence_points.append({"text": "No unnatural frequency spikes detected.", "status": "valid"})
 

@@ -105,15 +105,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (data.status === 'FAKE') {
                 document.body.className = 'theme-fake';
-                resultStatus.innerText = 'MANIPULATED';
-                verdictDesc.innerText = 'High probability of digital alteration or AI synthesis detected.';
-                animateGauge(data.trust_score);
+                resultStatus.innerText = 'FAKE';
+                verdictDesc.innerText = 'High probability of complete AI synthesis or heavy manipulation.';
+            } else if (data.status === 'EDITED') {
+                document.body.className = 'theme-edited';
+                resultStatus.innerText = 'EDITED';
+                verdictDesc.innerText = 'The image likely started as a real photo but shows signs of splicing, cloning, or retouching.';
             } else {
                 document.body.className = 'theme-real';
-                resultStatus.innerText = 'GENUINE';
-                verdictDesc.innerText = 'No evidence of pixel-level manipulation found.';
-                animateGauge(data.trust_score);
+                resultStatus.innerText = 'REAL';
+                verdictDesc.innerText = 'The image retains its original sensor noise and compression patterns.';
             }
+            animateGauge(data.trust_score);
 
             // Update Heatmap
             const heatmapImg = document.getElementById('result-heatmap');

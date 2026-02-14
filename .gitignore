@@ -1,6 +1,6 @@
 data/
 CASIA2/
-CASIA2.zip
+
 *.jpg
 !client/*.jpg
 *.pkl
@@ -9,3 +9,5 @@ __pycache__/
 .env
 temp_ela.jpg
 temp_upload.jpg
+archive/
+archive.zip

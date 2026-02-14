@@ -5,6 +5,7 @@
     --accent: #00f2ff;
     --accent-red: #ff3e3e;
     --accent-green: #00ff88;
+    --accent-warn: #ffae00;
     --text-main: #ffffff;
     --text-dim: #94a3b8;
     --glass: rgba(16, 18, 26, 0.8);
@@ -111,12 +112,14 @@ header h1 {
     margin-bottom: 1rem;
     background: linear-gradient(to bottom, #fff, #94a3b8);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
 header h1 span {
     background: linear-gradient(45deg, var(--accent), #00a2ff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
 }
 
@@ -363,6 +366,11 @@ header p {
     box-shadow: 0 0 10px var(--accent-red);
 }
 
+.status-warning {
+    background: var(--accent-warn);
+    box-shadow: 0 0 10px var(--accent-warn);
+}
+
 .heatmap-box {
     background: #000;
     border-radius: 16px;
@@ -426,6 +434,29 @@ header p {
 .theme-real .metric-bar {
     background: var(--accent-green);
     box-shadow: 0 0 10px var(--accent-green);
+}
+
+/* Edited state colors */
+.theme-edited .gauge-fill {
+    stroke: var(--accent-warn);
+}
+
+.theme-edited .gauge-value {
+    color: var(--accent-warn);
+}
+
+.theme-edited #result-status {
+    color: var(--accent-warn);
+}
+
+.theme-edited .metric-bar {
+    background: var(--accent-warn);
+    box-shadow: 0 0 10px var(--accent-warn);
+}
+
+.theme-edited .scanner-line {
+    background: linear-gradient(90deg, transparent, var(--accent-warn), transparent);
+    box-shadow: 0 0 15px var(--accent-warn);
 }
 
 @media (max-width: 768px) {
