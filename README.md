@@ -1,4 +1,4 @@
-# 🛡️ NeuralTrust: Pixel Authenticity & Forensic Engine
+# 🛡️ NeuralTrust: Pixel Authenticity & Forensic Engine 
 
 ![Python](https://img.shields.io/badge/Python-3.8+-3776AB?style=for-the-badge&logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-2.0+-000000?style=for-the-badge&logo=flask&logoColor=white)
