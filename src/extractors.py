@@ -39,8 +39,11 @@ class ForensicExtractors:
         Identifies unnatural patterns or checkerboard artifacts typical of AI generators.
         """
         # 1. Perform 2D Fast Fourier Transform
+        #it convert aimage into spatial domain --> frequency domain 
         dft = np.fft.fft2(gray_image)
         # 2. Shift the zero-frequency component to the center of the spectrum
+        #in a nomalimage low frequacy-->  at corner and heigh f--> center
+        #this line heigh frequency  --> center , low --> corner
         dft_shift = np.fft.fftshift(dft)
         # 3. Calculate Magnitude Spectrum (on log scale for better features)
         magnitude_spectrum = 20 * np.log(np.abs(dft_shift) + 1)

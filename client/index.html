@@ -30,6 +30,7 @@
         <section class="upload-area">
             <div class="glass-card" id="drop-zone">
                 <div class="scanner-line" id="scanner" style="display: none;"></div>
+                <div id="investigation-log" class="investigation-log" style="display: none;"></div>
                 <input type="file" id="file-input" hidden accept="image/*">
                 <div class="upload-icon">
                     <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -88,16 +89,34 @@
 
             <div class="forensic-insight glass-card">
                 <div class="insight-header">
-                    <div class="mini-icon">🔍</div>
-                    <h3>Forensic evidence</h3>
+                    <div class="mini-icon">🛡️</div>
+                    <h3>Security Integrity Audit</h3>
                 </div>
                 <div class="evidence-list" id="evidence-list">
-                    <!-- Dynamic evidence points will be added here -->
+                    <div class="audit-row-header">
+                        <span>CRITERION</span>
+                        <span>STATUS</span>
+                    </div>
+                    <!-- Audit rows will be injected here -->
                 </div>
-                <div class="heatmap-box">
-                    <img id="result-heatmap" src="" style="display:none;">
-                    <div class="heatmap-overlay">
-                        <span>DETECTION HEATMAP</span>
+                <div class="forensic-compare-container">
+                    <div class="forensic-compare" id="forensic-compare">
+                        <div class="compare-item image-after">
+                            <img id="heatmap-compare" src="" alt="Forensic Heatmap">
+                            <div class="label-after">HEATMAP</div>
+                        </div>
+                        <div class="compare-item image-before" id="image-before">
+                            <img id="original-compare" src="" alt="Original Image">
+                            <div class="label-before">ORIGINAL</div>
+                        </div>
+                        <div class="compare-slider" id="compare-slider">
+                            <div class="slider-button">
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M11 5L6 12L11 19M13 5L18 12L13 19" stroke="currentColor" stroke-width="2"
+                                        stroke-linecap="round" stroke-linejoin="round" />
+                                </svg>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

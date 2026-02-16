@@ -15,10 +15,19 @@ from extractors import ForensicExtractors
 from forgery_detectors import ForgeryDetectors
 
 app = Flask(__name__)
-CORS(app) # Allow frontend to talk to backend
+# Enable full CORS for local development
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+@app.before_request
+def log_request_info():
+    app.logger.debug('Headers: %s', request.headers)
+    app.logger.debug('Body: %s', request.get_data())
 
 @app.after_request
 def add_header(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = 'POST, GET, OPTIONS'
+    response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
     response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0, max-age=0'
     response.headers['Pragma'] = 'no-cache'
     response.headers['Expires'] = '-1'
@@ -144,4 +153,4 @@ def analyze():
             os.remove(img_path)
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
