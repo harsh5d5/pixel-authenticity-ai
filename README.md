@@ -33,7 +33,8 @@ To maintain high transparency, our engine follows a multi-phase forensic pipelin
 
 The repository is structured to separate the core forensic engine from the user interface and API layers.
 
-![Folder Structure](image/folder%20structure.png)
+![Folder Structure](image/folder%20structure%201.png)
+
 
 *<b>Figure 2:</b> Overview of the project directory, highlighting the modularity of the forensic extractors and the backend bridge.*
 
