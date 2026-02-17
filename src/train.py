@@ -21,9 +21,15 @@ class ForensicTrainer:
     def collect_features(self):
         """Iterates through data folders and extracts forensic features."""
         from tqdm import tqdm
-        categories = {'RealArt': 0, 'AiArtData': 1}
+        # Reverted to Original Dataset:
+        # training_real = Real (0)
+        # training_fake = Fake (1)
+        categories = {
+            'training_real': 0, 
+            'training_fake': 1
+        }
         
-        print(f"Starting feature extraction from: {self.data_dir}")
+        print(f"Starting standard feature extraction from: {self.data_dir}")
         
         for category, label in categories.items():
             dataset_path = os.path.join(self.data_dir, category)
@@ -99,7 +105,7 @@ class ForensicTrainer:
         return model
 
 if __name__ == "__main__":
-    dataset_path = os.path.join(os.getcwd(), 'archive')
+    dataset_path = os.path.join(os.getcwd(), 'data')
     trainer = ForensicTrainer(data_dir=dataset_path)
     
     df = trainer.collect_features()
